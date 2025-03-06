@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { ClipboardCopy, Check } from "lucide-react"
+import { ClipboardCopy, ClipboardPaste, Check } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function JsonPrettifier() {
@@ -11,6 +11,7 @@ export default function JsonPrettifier() {
   const [output, setOutput] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [pasted, setPasted] = useState(false)
 
   const prettifyJson = () => {
     try {
@@ -27,6 +28,17 @@ export default function JsonPrettifier() {
     } catch (err) {
       setError("Invalid JSON: " + (err instanceof Error ? err.message : "Unknown error"))
       setOutput("")
+    }
+  }
+
+  const pasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText()
+      setInput(text)
+      setPasted(true)
+      setTimeout(() => setPasted(false), 2000)
+    } catch (err) {
+      console.error("Failed to paste: ", err)
     }
   }
 
@@ -48,21 +60,39 @@ export default function JsonPrettifier() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="space-y-2">
-          <h2 className="text-lg font-medium">Input JSON</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-medium">Input JSON</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={pasteFromClipboard}
+              //disabled={!output}
+              className="flex items-center gap-1"
+            >
+              {pasted ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  <span>Pasted!</span>
+                </>
+              ) : (
+                <>
+                  <ClipboardCopy className="h-4 w-4" />
+                  <span>Paste</span>
+                </>
+              )}
+            </Button>
+          </div>
           <Textarea
             placeholder="Paste your JSON here..."
             className="min-h-[300px] font-mono text-sm"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button onClick={prettifyJson} className="w-full">
-            Prettify
-          </Button>
         </div>
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium">Prettified JSON</h2>
+            <h2 className="text-lg font-medium">Cute JSON</h2>
             <Button
               variant="outline"
               size="sm"
@@ -97,6 +127,9 @@ export default function JsonPrettifier() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
+      <Button onClick={prettifyJson} className="w-full">
+        Prettify
+      </Button>
 
       <div className="mt-8 text-center text-sm text-muted-foreground">
         <p>Paste your JSON in the left textarea and click "Prettify" to format it.</p>
