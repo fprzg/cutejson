@@ -56,7 +56,7 @@ export default function JsonPrettifier() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">JSON Prettifier</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Cute JSON</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div className="space-y-2">
@@ -76,7 +76,7 @@ export default function JsonPrettifier() {
                 </>
               ) : (
                 <>
-                  <ClipboardCopy className="h-4 w-4" />
+                  <ClipboardPaste className="h-4 w-4" />
                   <span>Paste</span>
                 </>
               )}

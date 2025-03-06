@@ -6,7 +6,7 @@ import { Inter } from "next/font/google"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "JSON Prettifier",
+  title: "Cute JSON",
   description: "A simple tool to prettify JSON data",
 }
 
